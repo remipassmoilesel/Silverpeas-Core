@@ -39,9 +39,9 @@
 <c:set var="computedDomainId" value="<%= DomainDetector.getDomainId(request)%>"/>
 
 <%
-  LocalizationBundle authenticationBundle = ResourceLocator.getLocalizationBundle(
-      "org.silverpeas.authentication.multilang.authentication",
-      request.getLocale().getLanguage());
+  LocalizationBundle authenticationBundle = ResourceLocator
+      .getLocalizationBundle("org.silverpeas.authentication.multilang.authentication",
+          request.getLocale().getLanguage());
 
   pageContext.setAttribute("authenticationBundle", authenticationBundle);
 
@@ -221,6 +221,13 @@
           </div>
           <div class="clear"></div>
         </div>
+
+        <p>
+          <label><span>Démo</span>
+            <select style="display: block; width: 448px; margin-bottom: 15px" id="accounts"></select></span>
+          </label>
+        </p>
+
         <p>
           <label><span><fmt:message key="authentication.logon.login"/></span><input type="text" name="Login" id="Login"/><input type="hidden" class="noDisplay" name="cryptedPassword"/></label>
         </p>
@@ -228,6 +235,31 @@
         <p>
           <label><span><fmt:message key="authentication.logon.password"/></span><input type="password" name="Password" id="Password"/></label>
         </p>
+
+        <script type="text/javascript">
+
+          $(function() {
+
+            var demoAccounts = [{user : "remi"}, {user : "miguel"}, {user : "nicolas"},
+              {user : "yohann"}, {user : "david"},];
+
+            var defaultPassword = "azerty";
+
+            var list = $("#accounts");
+            list.change(function() {
+              $("#Login").val(list.val());
+              $("#Password").val(defaultPassword);
+            });
+
+            $.each(demoAccounts, function(index, val) {
+              var opt = $("<option></option>").attr({value : val.user + "-silverpeas"}).text(
+                  val.user);
+              list.append(opt);
+            });
+          });
+
+        </script>
+
         <c:choose>
           <c:when test="${!pageScope.multipleDomains}">
             <input class="noDisplay" type="hidden" name="DomainId" value="<%=listDomains.get(0).getId()%>"/>
@@ -239,7 +271,9 @@
             <p><label><span><fmt:message key="authentication.logon.domain"/></span>
               <select id="DomainId" name="DomainId" size="1">
                 <c:forEach var="domain" items="${pageScope.listDomains}">
-                  <option value="<c:out value="${domain.id}" />"<c:if test="${domain.id eq param.DomainId}">selected</c:if>><c:out value="${domain.name}"/></option>
+                  <option value="<c:out value="${domain.id}" />"
+                          <c:if test="${domain.id eq param.DomainId}">selected</c:if>>
+                    <c:out value="${domain.name}"/></option>
                 </c:forEach>
               </select>
             </label></p>
@@ -266,7 +300,7 @@
             <% if (forgottenPwdActive) { %>
           <span class="separator">|</span>
           <span class="changePwd">
-            <% } else {%>
+              <% } else {%>
 
         <p>
           <span class="changePwd">
