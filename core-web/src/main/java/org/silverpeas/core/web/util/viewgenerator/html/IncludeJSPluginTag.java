@@ -152,6 +152,9 @@ public class IncludeJSPluginTag extends SimpleTagSupport {
         case layout:
           includeLayout(xhtml, getLookHelper());
           break;
+        case chatClient:
+          includeChatClient(xhtml);
+          break;
       }
     } catch (IllegalArgumentException ex) {
       //ignore

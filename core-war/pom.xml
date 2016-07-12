@@ -220,6 +220,7 @@
             <exclude>**/*-min-*</exclude>
             <exclude>**/util/yui/**/*</exclude>
             <exclude>**/ckeditor*/**/*</exclude>
+            <exclude>**/chatclient*/**/*</exclude>
           </excludes>
         </configuration>
       </plugin>

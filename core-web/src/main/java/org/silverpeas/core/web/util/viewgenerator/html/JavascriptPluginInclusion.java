@@ -662,4 +662,22 @@ public class JavascriptPluginInclusion {
     String normalizedUrl = URLUtil.getMinifiedWebResourceUrl(url);
     return URLUtil.appendVersion(normalizedUrl);
   }
+
+
+  public static String CHAT_CLIENT_DIR = URLUtil.getApplicationURL() + "/chatclient/";
+  public static String CHAT_CLIENT_STYLES = CHAT_CLIENT_DIR + "css/jsxc.css";
+  public static String CHAT_CLIENT_DEPENDENCIES = CHAT_CLIENT_DIR + "lib/jsxc.dep.js";
+  public static String CHAT_CLIENT_MAIN = CHAT_CLIENT_DIR + "jsxc.js";
+  public static String CHAT_CLIENT_INIT = CHAT_CLIENT_DIR + "jsxc_init.js";
+
+  public static ElementContainer includeChatClient(final ElementContainer xhtml) {
+
+    xhtml.addElement(new link().setType(STYLESHEET_TYPE).setRel(STYLESHEET_REL)
+        .setHref(CHAT_CLIENT_STYLES));
+    xhtml.addElement(new script().setType(JAVASCRIPT_TYPE).setSrc(CHAT_CLIENT_DEPENDENCIES));
+    xhtml.addElement(new script().setType(JAVASCRIPT_TYPE).setSrc(CHAT_CLIENT_MAIN));
+    xhtml.addElement(new script().setType(JAVASCRIPT_TYPE).setSrc(CHAT_CLIENT_INIT));
+
+    return xhtml;
+  }
 }

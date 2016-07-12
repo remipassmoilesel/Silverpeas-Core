@@ -61,14 +61,16 @@ public enum SupportedJavaScriptPlugins {
    */
   profile,
   /**
-   * Silverpeas plugin to print out a popup with information about a given user and with some social
+   * Silverpeas plugin to print out a popup with information about a given user and with some
+   * social
    * functions (invitation, messaging,...). The HTML element on which the plugin is invoked must
    * present the rel attribute valued with the user identifier.
    */
   userZoom,
   /**
    * Silverpeas plugin to send a relationship asking to a given user. The HTML element on which the
-   * plugin is invoked must present the rel attribute valued with the user identifier and optionally
+   * plugin is invoked must present the rel attribute valued with the user identifier and
+   * optionally
    * the user full name (comma separated).
    */
   invitme,
@@ -99,7 +101,6 @@ public enum SupportedJavaScriptPlugins {
   /**
    * JQuery plugin that implements an `<iframe>` transport so that `$.ajax()` calls support the
    * uploading of files using standard HTML file input fields. {
-   *
    * @see http://api.jquery.com/extending-ajax/#Transports}
    */
   iframeajaxtransport,
@@ -125,7 +126,8 @@ public enum SupportedJavaScriptPlugins {
   gauge,
   /**
    * Silverpeas plugin to render a widget with the PdC'axis from which the user can select a set of
-   * values (one value per axis). Warning, this plugin doesn't render the axis to classify a content
+   * values (one value per axis). Warning, this plugin doesn't render the axis to classify a
+   * content
    * on the PdC as it doesn't take care of the context to which the classification belongs (the
    * component instance, the type of the content, ...).
    */
@@ -178,5 +180,10 @@ public enum SupportedJavaScriptPlugins {
   /**
    * External plugin to centralize the management of Silverpeas's layout
    */
-  layout
+  layout,
+
+  /**
+   * JSXC Chat client
+   */
+  chatClient
 }
