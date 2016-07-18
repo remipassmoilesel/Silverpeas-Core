@@ -1,8 +1,9 @@
-package org.silverpeas.core.chat;
+package org.silverpeas.core.chat.listeners;
 
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.admin.user.notification.UserEvent;
+import org.silverpeas.core.chat.HttpRequestResponse;
 import org.silverpeas.core.chat.servers.ChatServer;
 import org.silverpeas.core.notification.system.CDIResourceEventListener;
 import org.silverpeas.core.util.logging.SilverLogger;
@@ -10,8 +11,9 @@ import org.silverpeas.core.util.logging.SilverLogger;
 import javax.inject.Inject;
 
 /**
- * Listen user modification to clone them in Chat server
+ * Listen user modifications to clone them in Chat server
  *
+ * @author remipassmoilesel
  */
 public class UserSubscriptionListener extends CDIResourceEventListener<UserEvent> {
 
@@ -39,7 +41,7 @@ public class UserSubscriptionListener extends CDIResourceEventListener<UserEvent
   @Override
   public void onDeletion(final UserEvent event) throws Exception {
 
-    logger.debug("User have been deleted");
+    logger.debug("Silverpeas user have been deleted");
 
     // prepare ids
     UserDetail detail = event.getTransition().getBefore();
@@ -49,18 +51,6 @@ public class UserSubscriptionListener extends CDIResourceEventListener<UserEvent
     logger.info("Xmpp user have been deleted: " + detail.getLogin());
     logger.info(resp.toString());
 
-  }
-
-  @Override
-  public void onRemoving(final UserEvent event) throws Exception {
-    logger.warn("###/// onRemoving");
-    logger.warn(event.toString());
-  }
-
-  @Override
-  public void onUpdate(final UserEvent event) throws Exception {
-    logger.warn("###/// onUpdate");
-    logger.warn(event.toString());
   }
 
 }

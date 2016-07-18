@@ -12,6 +12,8 @@ import java.net.URLConnection;
 
 /**
  * Wrapper for HTTP request response
+ *
+ * @author remipassmoilesel
  */
 public class HttpRequestResponse {
 
@@ -47,7 +49,7 @@ public class HttpRequestResponse {
 
     try {
 
-      // get response code
+      // get response code before all other operations
       this.code = con.getResponseCode();
 
       String inputLine;
@@ -62,8 +64,11 @@ public class HttpRequestResponse {
       this.response = sb.toString();
 
     } catch (Exception e) {
+
+      // even if exception is thrown, response code SHOULD be accessible
+
       SilverLogger.getLogger(this).warn(
-          "Error while formatting HTTP response: " + " / " + e.getClass().getName() + " / " +
+          "Error while formatting HTTP response: " + e.getClass().getName() + " / " +
               e.getMessage());
     }
 
@@ -94,7 +99,6 @@ public class HttpRequestResponse {
       return (JSONObject) parser.parse(response);
     } catch (ParseException e) {
       SilverLogger.getLogger(this).warn("Error while parsing JSON response");
-      e.printStackTrace();
     }
 
     return null;

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 /**
  * Utility for sending HTTP requests
+ *
+ * @author remipassmoilesel
  */
 public class HttpRequestHandler {
 
