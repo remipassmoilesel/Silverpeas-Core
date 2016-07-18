@@ -886,6 +886,33 @@ public class UserDetail implements Serializable, Comparable<UserDetail> {
     return notifManualReceiverLimit;
   }
 
+  @Override
+  public String toString() {
+    return "UserDetail{" +
+        "id='" + id + '\'' +
+        ", specificId='" + specificId + '\'' +
+        ", domainId='" + domainId + '\'' +
+        ", login='" + login + '\'' +
+        ", firstName='" + firstName + '\'' +
+        ", lastName='" + lastName + '\'' +
+        ", eMail='" + eMail + '\'' +
+        ", accessLevel=" + accessLevel +
+        ", loginQuestion='" + loginQuestion + '\'' +
+        ", loginAnswer='" + loginAnswer + '\'' +
+        ", creationDate=" + creationDate +
+        ", saveDate=" + saveDate +
+        ", version=" + version +
+        ", tosAcceptanceDate=" + tosAcceptanceDate +
+        ", lastLoginDate=" + lastLoginDate +
+        ", nbSuccessfulLoginAttempts=" + nbSuccessfulLoginAttempts +
+        ", lastLoginCredentialUpdateDate=" + lastLoginCredentialUpdateDate +
+        ", expirationDate=" + expirationDate +
+        ", state=" + state +
+        ", stateSaveDate=" + stateSaveDate +
+        ", notifManualReceiverLimit=" + notifManualReceiverLimit +
+        '}';
+  }
+
   /**
    * Gets the unique identifier of the anonymous user as set in the general look properties.
    * @return the anonymous user identifier.
@@ -911,4 +938,5 @@ public class UserDetail implements Serializable, Comparable<UserDetail> {
       return new ValueBuffer().append(user.getLastName()).append(user.getFirstName());
     }
   }
+
 }
