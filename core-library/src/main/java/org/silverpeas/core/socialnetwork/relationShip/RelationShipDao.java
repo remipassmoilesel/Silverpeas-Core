@@ -24,6 +24,10 @@
 
 package org.silverpeas.core.socialnetwork.relationShip;
 
+import org.silverpeas.core.persistence.jdbc.DBUtil;
+import org.silverpeas.core.socialnetwork.model.SocialInformation;
+
+import javax.inject.Singleton;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,12 +36,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.silverpeas.core.socialnetwork.model.SocialInformation;
-
-import org.silverpeas.core.persistence.jdbc.DBUtil;
-
-import javax.inject.Singleton;
 
 @Singleton
 public class RelationShipDao {
@@ -54,7 +52,7 @@ public class RelationShipDao {
       "SELECT id, user1Id, user2Id, typeRelationShipId, acceptanceDate,inviterId FROM sb_sn_RelationShip  WHERE id = ?";
 
   /**
-   * rturn int (the id of this new relationShip)
+   * return int (the id of this new relationShip)
    * @param connection
    * @param relationShip
    * @return int
@@ -73,6 +71,7 @@ public class RelationShipDao {
       pstmt.setTimestamp(5, new Timestamp(relationShip.getAcceptanceDate().getTime()));
       pstmt.setInt(6, relationShip.getInviterId());
       pstmt.executeUpdate();
+
     } finally {
       DBUtil.close(pstmt);
     }
@@ -98,6 +97,7 @@ public class RelationShipDao {
       pstmt.setInt(2, user2Id);
       pstmt.executeUpdate();
       endAction = true;
+
     } finally {
       DBUtil.close(pstmt);
     }

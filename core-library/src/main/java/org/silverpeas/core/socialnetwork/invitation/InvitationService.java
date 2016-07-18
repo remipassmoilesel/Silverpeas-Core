@@ -24,12 +24,16 @@
 
 package org.silverpeas.core.socialnetwork.invitation;
 
+import org.silverpeas.core.notification.system.ResourceEvent;
 import org.silverpeas.core.socialnetwork.relationShip.RelationShip;
 import org.silverpeas.core.socialnetwork.relationShip.RelationShipDao;
 import org.silverpeas.core.silvertrace.SilverTrace;
 import org.silverpeas.core.persistence.jdbc.DBUtil;
+import org.silverpeas.core.socialnetwork.relationShip.RelationShipEventNotifier;
 import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.exception.UtilException;
+import org.silverpeas.core.util.logging.SilverLogger;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -48,10 +52,15 @@ public class InvitationService {
     return ServiceProvider.getService(InvitationService.class);
   }
 
+  private SilverLogger logger = SilverLogger.getLogger(this);
+
   @Inject
   private InvitationDao invitationDao;
   @Inject
   private RelationShipDao relationShipDao;
+
+  @Inject
+  private RelationShipEventNotifier notifier;
 
   /**
    * Default Constructor
@@ -119,6 +128,9 @@ public class InvitationService {
    * RelationShip if the action has been done successfully
    */
   public int accepteInvitation(int idInvitation) {
+
+    logger.info("Invitation accepted: " + idInvitation);
+
     int resultAccepteInvitation = 0;
     Connection connection = null;
     try {
@@ -146,8 +158,14 @@ public class InvitationService {
         invitationDao.deleteSameInvitations(connection, idInvitation);
         resultAccepteInvitation = relationShipDao.createRelationShip(connection, ship1);
         relationShipDao.createRelationShip(connection, ship2);
+
+        // notify on relationship creation
+        notifier.notifyEventOn(ResourceEvent.Type.CREATION, ship1);
+        notifier.notifyEventOn(ResourceEvent.Type.CREATION, ship2);
+
       }
       connection.commit();
+
     } catch (Exception ex) {
       resultAccepteInvitation = 0;
       SilverTrace.error("Silverpeas.Bus.SocialNetwork.Invitation",

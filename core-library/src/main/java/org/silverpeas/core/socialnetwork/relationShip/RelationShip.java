@@ -24,9 +24,13 @@
 
 package org.silverpeas.core.socialnetwork.relationShip;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class RelationShip {
+public class RelationShip implements Serializable {
+
+  // No serial ID provided here
+  //private static final long serialVersionUID = 19198636184186183298118181L;
 
   private int idRelationShip;
   private int user1Id;
@@ -142,10 +146,22 @@ public class RelationShip {
     return inviterId;
   }
 
+  @Override
+  public String toString() {
+    return "RelationShip{" +
+        "idRelationShip=" + idRelationShip +
+        ", user1Id=" + user1Id +
+        ", user2Id=" + user2Id +
+        ", typeRelationShipId=" + typeRelationShipId +
+        ", acceptanceDate=" + acceptanceDate +
+        ", inviterId=" + inviterId +
+        '}';
+  }
+
   /**
    * Indicates whether some other object is "equal to" this one.
-   *@param obj the reference object with which to compare.
-   *@return <code>true</code> if this object is the same as the obj argument; <code>false</code>
+   * @param obj the reference object with which to compare.
+   * @return <code>true</code> if this object is the same as the obj argument; <code>false</code>
    * otherwise.
    */
   @Override
@@ -171,7 +187,7 @@ public class RelationShip {
     }
     if (this.acceptanceDate != other.acceptanceDate &&
         (this.acceptanceDate == null || !this.acceptanceDate.
-        equals(other.acceptanceDate))) {
+            equals(other.acceptanceDate))) {
       return false;
     }
     return true;
