@@ -23,6 +23,7 @@
  */
 package org.silverpeas.core.web.util.viewgenerator.html;
 
+import org.silverpeas.core.chat.ChatIntegrationCode;
 import org.silverpeas.core.notification.user.client.NotificationManagerSettings;
 import org.silverpeas.core.util.URLUtil;
 import org.apache.ecs.Element;
@@ -43,6 +44,9 @@ import java.text.MessageFormat;
 import static org.silverpeas.core.cache.service.CacheServiceProvider.getRequestCacheService;
 import static org.silverpeas.core.chart.ChartSettings.getDefaultPieChartColorsAsJson;
 import static org.silverpeas.core.chart.ChartSettings.getThresholdOfPieCombination;
+import static org.silverpeas.core.chat.ChatIntegrationCode.CHAT_CLIENT_DEPENDENCIES;
+import static org.silverpeas.core.chat.ChatIntegrationCode.CHAT_CLIENT_INIT;
+import static org.silverpeas.core.chat.ChatIntegrationCode.CHAT_CLIENT_MAIN;
 import static org.silverpeas.core.web.util.viewgenerator.html.SupportedJavaScriptPlugins.ticker;
 
 /**
@@ -663,20 +667,9 @@ public class JavascriptPluginInclusion {
     return URLUtil.appendVersion(normalizedUrl);
   }
 
-
-  public static String CHAT_CLIENT_DIR = URLUtil.getApplicationURL() + "/chatclient/";
-  public static String CHAT_CLIENT_STYLES = CHAT_CLIENT_DIR + "css/jsxc.css";
-  public static String CHAT_CLIENT_DEPENDENCIES = CHAT_CLIENT_DIR + "lib/jsxc.dep.js";
-  public static String CHAT_CLIENT_MAIN = CHAT_CLIENT_DIR + "jsxc.js";
-  public static String CHAT_CLIENT_INIT = CHAT_CLIENT_DIR + "jsxc_init.js";
-
   public static ElementContainer includeChatClient(final ElementContainer xhtml) {
 
-    xhtml.addElement(new link().setType(STYLESHEET_TYPE).setRel(STYLESHEET_REL)
-        .setHref(CHAT_CLIENT_STYLES));
-    xhtml.addElement(new script().setType(JAVASCRIPT_TYPE).setSrc(CHAT_CLIENT_DEPENDENCIES));
-    xhtml.addElement(new script().setType(JAVASCRIPT_TYPE).setSrc(CHAT_CLIENT_MAIN));
-    xhtml.addElement(new script().setType(JAVASCRIPT_TYPE).setSrc(CHAT_CLIENT_INIT));
+    ChatIntegrationCode.addIntegrationCode(xhtml);
 
     return xhtml;
   }
