@@ -24,10 +24,15 @@
 
 package org.silverpeas.web.socialnetwork.invitation.servlets;
 
+import org.silverpeas.core.admin.service.AdminController;
+import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.web.socialnetwork.myprofil.control.MyProfilSessionController;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.core.util.JSONCodec;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,22 +41,30 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Writer;
 
+import static org.silverpeas.web.socialnetwork.invitation.servlets.InvitationJSONActions
+    .IgnoreInvitation;
 import static org.silverpeas.web.socialnetwork.invitation.servlets.InvitationJSONActions.valueOf;
-import static org.silverpeas.core.web.mvc.controller.MainSessionController.MAIN_SESSION_CONTROLLER_ATT;
+import static org.silverpeas.core.web.mvc.controller.MainSessionController
+    .MAIN_SESSION_CONTROLLER_ATT;
 
 public class InvitationJSONServlet extends HttpServlet {
 
   private static final long serialVersionUID = -9167060370102235500L;
 
+  private SilverLogger logger = SilverLogger.getLogger(this);
+
+  @Inject
+  private AdminController adminController;
+
   @Override
-  public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
-      IOException {
+  public void doGet(HttpServletRequest req, HttpServletResponse res)
+      throws ServletException, IOException {
     doPost(req, res);
   }
 
   @Override
-  public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException,
-      IOException {
+  public void doPost(HttpServletRequest req, HttpServletResponse res)
+      throws ServletException, IOException {
 
     HttpSession session = req.getSession(true);
 
@@ -60,9 +73,8 @@ public class InvitationJSONServlet extends HttpServlet {
     if (mpsc == null) {
       MainSessionController mainSessionCtrl =
           (MainSessionController) session.getAttribute(MAIN_SESSION_CONTROLLER_ATT);
-      mpsc =
-          new MyProfilSessionController(mainSessionCtrl, mainSessionCtrl.createComponentContext(
-          null, null));
+      mpsc = new MyProfilSessionController(mainSessionCtrl,
+          mainSessionCtrl.createComponentContext(null, null));
       session.setAttribute(sessionName, mpsc);
     }
 
@@ -75,8 +87,16 @@ public class InvitationJSONServlet extends HttpServlet {
     switch (action) {
       case SendInvitation: {
         String receiverId = req.getParameter("TargetUserId");
+        String receiverLogin = req.getParameter("TargetUserLogin");
+        String receiverDomainId = req.getParameter("TargetUserDomainId");
         String message = req.getParameter("Message");
+
+        // if no id is provided, try to get it from login and domain
+        if (receiverId == null && receiverLogin != null && receiverDomainId != null) {
+          receiverId = adminController.getUserIdByLoginAndDomain(receiverLogin, receiverDomainId);
+        }
         mpsc.sendInvitation(receiverId, message);
+
         jsonResultStr = JSONCodec.encodeObject(json -> json.put("success", true));
         break;
       }
