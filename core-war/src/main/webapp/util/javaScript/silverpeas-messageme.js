@@ -65,14 +65,19 @@
   };
 
   function render(target, user) {
-    target.data('messageMe', true);
-    target.click(function() {
-      $.messageMe.userId = user.id;
-      $.messageMe.currentElement = target;
-      $("#notificationDialog").dialog("option", "title", user.fullName);
-      $("#notificationDialog").dialog("open");
-      return false;
+
+    target.click(function(){
+      parent.jsxc.api.Silverpeas.openChatWindowById(user.id);
     });
+
+    // target.data('messageMe', true);
+    // target.click(function() {
+    //   $.messageMe.userId = user.id;
+    //   $.messageMe.currentElement = target;
+    //   $("#notificationDialog").dialog("option", "title", user.fullName);
+    //   $("#notificationDialog").dialog("open");
+    //   return false;
+    // });
   }
 
   function closeMessagingPopup() {
