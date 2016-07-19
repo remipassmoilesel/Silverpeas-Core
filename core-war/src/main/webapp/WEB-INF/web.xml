@@ -641,6 +641,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <servlet-name>TokenWebPageUpdater</servlet-name>
     <servlet-class>org.silverpeas.web.token.ProtectedWebPageUpdater</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>ChatUserInformationsServlet</servlet-name>
+    <servlet-class>org.silverpeas.web.chat.ChatUserInformationsServlet</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>AuthenticationServlet</servlet-name>
@@ -1048,6 +1052,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   <servlet-mapping>
     <servlet-name>OutlookSyncCalendarServlet</servlet-name>
     <url-pattern>/ImportCalendar/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ChatUserInformationsServlet</servlet-name>
+    <url-pattern>/ChatUserInformations</url-pattern>
   </servlet-mapping>
 
   <jsp-config>
