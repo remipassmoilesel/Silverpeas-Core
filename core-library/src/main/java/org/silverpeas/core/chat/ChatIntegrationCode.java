@@ -27,7 +27,12 @@ public class ChatIntegrationCode {
   private static final String STYLESHEET_TYPE = "text/css";
   private static final String STYLESHEET_REL = "stylesheet";
 
-  public static final String addIntegrationCode(final ElementContainer xhtml) {
+  /**
+   * Add integration code to ElementContainer
+   * @param xhtml
+   * @return
+   */
+  public static final String addClientIntegrationCode(final ElementContainer xhtml) {
 
     // add client style
     xhtml.addElement(new link().setType(STYLESHEET_TYPE).setRel(STYLESHEET_REL)
@@ -46,16 +51,33 @@ public class ChatIntegrationCode {
     UserFull full = UserFull.getById(UserDetail.getCurrentRequester().getId());
     String userLogin = full.getLogin();
     String userPassword = full.getToken();
+    String userDomainId = full.getDomainId();
 
     // add connexion credentials
     xhtml.addElement("<script type='text/javascript'>"
         + "window.jsxcConnexionCredentials = {"
             + "userLogin: '" + userLogin + "', "
             + "userPassword: '" + userPassword + "', "
+            + "userDomainId: '" + userDomainId + "', "
             + "httpBindUrl: '" + httpBindUrl + "', "
             + "xmppDomain: '" + xmppDomain + "', "
+            + "silverpeasContext: '" + URLUtil.getApplicationURL() + "', "
         + "}" +
         "</script>");
+
+    return null;
+  }
+
+  /**
+   * Return a link element which open chat client for composing message
+   * @param text
+   * @param loginDest
+   * @return
+   */
+  public String getMessageLink(String text, String loginDest){
+
+    String m_context = URLUtil.getApplicationURL();
+
 
     return null;
   }

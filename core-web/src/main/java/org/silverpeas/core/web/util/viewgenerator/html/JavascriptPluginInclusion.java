@@ -44,9 +44,6 @@ import java.text.MessageFormat;
 import static org.silverpeas.core.cache.service.CacheServiceProvider.getRequestCacheService;
 import static org.silverpeas.core.chart.ChartSettings.getDefaultPieChartColorsAsJson;
 import static org.silverpeas.core.chart.ChartSettings.getThresholdOfPieCombination;
-import static org.silverpeas.core.chat.ChatIntegrationCode.CHAT_CLIENT_DEPENDENCIES;
-import static org.silverpeas.core.chat.ChatIntegrationCode.CHAT_CLIENT_INIT;
-import static org.silverpeas.core.chat.ChatIntegrationCode.CHAT_CLIENT_MAIN;
 import static org.silverpeas.core.web.util.viewgenerator.html.SupportedJavaScriptPlugins.ticker;
 
 /**
@@ -669,7 +666,7 @@ public class JavascriptPluginInclusion {
 
   public static ElementContainer includeChatClient(final ElementContainer xhtml) {
 
-    ChatIntegrationCode.addIntegrationCode(xhtml);
+    ChatIntegrationCode.addClientIntegrationCode(xhtml);
 
     return xhtml;
   }
