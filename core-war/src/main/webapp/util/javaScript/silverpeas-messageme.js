@@ -67,7 +67,8 @@
   function render(target, user) {
 
     target.click(function(){
-      parent.jsxc.api.Silverpeas.openChatWindowById(user.id);
+      var jsxcRef = window.jsxc || parent.window.jsxc;
+      jsxcRef.api.Silverpeas.openChatWindowById(user.id);
     });
 
     // target.data('messageMe', true);
