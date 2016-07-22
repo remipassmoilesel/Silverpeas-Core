@@ -33,70 +33,52 @@ public class RelationShipListener extends CDIResourceEventListener<RelationShipE
   @Override
   public void onCreation(final RelationShipEvent event) throws Exception {
 
-    logger.info("Relationship have been created");
+    logger.info("Silverpeas relationship have been created");
     logger.info(event.toString());
 
     // prepare ids
     final RelationShip rs = event.getTransition().getAfter();
 
-    UserDetail ud1 = UserDetail.getById(String.valueOf(rs.getUser1Id()));
-    UserDetail ud2 = UserDetail.getById(String.valueOf(rs.getUser2Id()));
+    UserFull uf1 = UserFull.getById(String.valueOf(rs.getUser1Id()));
+    UserFull uf2 = UserFull.getById(String.valueOf(rs.getUser2Id()));
 
-    logger.debug("ud1.toString()");
-    logger.debug(ud1.toString());
-    logger.debug(ud1.getLogin());
+    logger.info("Relation: " + uf1.getLogin() + " / " + uf2.getLogin());
 
-    logger.debug("ud2.toString()");
-    logger.debug(ud2.toString());
-    logger.debug(ud2.getLogin());
-
-    HttpRequestResponse resp;
+    HttpRequestResponse resp = null;
     try {
 
-      resp = server.createRelationShip(ud1.getLogin(), ud2.getLogin());
+       resp = server.createRelationShip(uf1, uf2);
 
-      logger
-          .info("Xmpp relationship have been created: " + ud1.getLogin() + " / " + ud2.getLogin());
-      logger.info(resp.toString());
+    } catch (ChatServerException e) {
 
-    }
-
-    // do not throw if relation ship already exist
-    catch (ChatServerException e) {
-
+      // do not throw if relation ship already exist
       if (ChatServerException.RELATIONSHIP_ALREADY_EXIST.equals(e.getMessage()) != true) {
         throw e;
       }
 
-      logger.warn("Relationship already exist: " + ud1.getLogin() + " / " + ud2.getLogin());
+      logger.warn("Relationship already exist: " + uf1.getLogin() + " / " + uf2.getLogin());
 
     }
+
+    logger.info("XMPP relationship have been created");
+    logger.info(resp != null ? resp.toString() : "HTTP response: null");
   }
 
   @Override
   public void onDeletion(final RelationShipEvent event) throws Exception {
 
-    logger.info("RelationShip have been deleted");
+    logger.info("Silverpeas relationShip have been deleted");
     logger.info(event.toString());
 
     // prepare ids
     final RelationShip rs = event.getTransition().getBefore();
 
-    UserDetail ud1 = UserDetail.getById(String.valueOf(rs.getUser1Id()));
-    UserDetail ud2 = UserDetail.getById(String.valueOf(rs.getUser2Id()));
+    UserFull uf1 = UserFull.getById(String.valueOf(rs.getUser1Id()));
+    UserFull uf2 = UserFull.getById(String.valueOf(rs.getUser2Id()));
 
-    logger.debug("ud1.toString()");
-    logger.debug(ud1.toString());
-    logger.debug(ud1.getLogin());
+    final HttpRequestResponse resp = server.deleteRelationShip(uf1, uf2);
 
-    logger.debug("ud2.toString()");
-    logger.debug(ud2.toString());
-    logger.debug(ud2.getLogin());
-
-    HttpRequestResponse resp = server.deleteRelationShip(ud1.getLogin(), ud2.getLogin());
-
-    logger.info("Xmpp relationship have been deleted: " + ud1.getLogin() + " / " + ud2.getLogin());
+    logger.info("XMPP relationship have been deleted");
     logger.info(resp.toString());
-
   }
 }

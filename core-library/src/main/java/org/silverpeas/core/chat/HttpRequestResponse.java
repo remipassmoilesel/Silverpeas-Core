@@ -12,7 +12,6 @@ import java.net.URLConnection;
 
 /**
  * Wrapper for HTTP request response
- *
  * @author remipassmoilesel
  */
 public class HttpRequestResponse {
@@ -36,6 +35,8 @@ public class HttpRequestResponse {
    * Origin connection
    */
   private URLConnection con;
+
+  private SilverLogger logger = SilverLogger.getLogger(this);
 
   /**
    * Http request response wrapper
@@ -67,9 +68,7 @@ public class HttpRequestResponse {
 
       // even if exception is thrown, response code SHOULD be accessible
 
-      SilverLogger.getLogger(this).warn(
-          "Error while formatting HTTP response: " + e.getClass().getName() + " / " +
-              e.getMessage());
+      logger.warn("Error while formatting HTTP response: ", e);
     }
 
   }

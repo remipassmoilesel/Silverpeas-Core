@@ -1,6 +1,7 @@
 package org.silverpeas.core.chat.servers;
 
 import org.apache.http.message.BasicNameValuePair;
+import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.chat.ChatServerException;
 import org.silverpeas.core.chat.HttpRequestHandler;
 import org.silverpeas.core.chat.HttpRequestResponse;
@@ -10,6 +11,8 @@ import org.silverpeas.core.util.logging.SilverLogger;
 
 
 import java.util.ArrayList;
+
+import static org.silverpeas.core.util.MailUtil.getLogin;
 
 /**
  * <p>Openfire server management service</p>
@@ -50,14 +53,12 @@ public class OpenfireServer implements ChatServer {
 
   }
 
-  /**
-   * Create a user
-   * @param login
-   * @param password
-   * @return
-   */
   @Override
-  public HttpRequestResponse createUser(final String login, final String password) {
+  public HttpRequestResponse createUser(final UserFull user) {
+
+    // get cross domain login and password
+    String login = getNodeFromUser(user);
+    String password = user.getToken();
 
     ArrayList<BasicNameValuePair> datas = new ArrayList<>();
     datas.add(new BasicNameValuePair("username", login));
@@ -67,132 +68,111 @@ public class OpenfireServer implements ChatServer {
       final HttpRequestResponse resp =
           requestHandler.doPost(url + "/users", datas, getAuthorizationHeaders());
 
-      // throw if user already exist on server
-      if (resp.getCode() == 409) {
-        throw new ChatServerException(ChatServerException.USER_ALREADY_EXIST);
-      }
-
-      return resp;
-    } catch (Exception e) {
-
-      if (e instanceof ChatServerException) {
-        throw (ChatServerException) e;
-      } else {
-        // other errors
-        logger.error("Error while creating user: " + " / " + e.getClass().getName() + " / " +
-            e.getMessage());
-
+      if (resp.getCode() != 201) {
+        logger.error("Error while creating XMPP user");
+        logger.error(resp.toString());
         throw new ChatServerException(ChatServerException.USER_CREATION_FAIL);
       }
 
+      return resp;
+    }
+
+    catch (Exception e) {
+      logger.error("Error while creating XMPP user");
+      logger.error(e.getClass().getName() + " / " + e.getMessage());
+      throw new ChatServerException(ChatServerException.USER_CREATION_FAIL);
     }
   }
 
-  /**
-   * Delete a user
-   * @param login
-   * @return
-   */
   @Override
-  public HttpRequestResponse deleteUser(final String login) {
+  public HttpRequestResponse deleteUser(final UserFull user) {
+
+    String login = getNodeFromUser(user);
 
     try {
       final HttpRequestResponse resp =
           requestHandler.doDelete(url + "/users/" + login, null, getAuthorizationHeaders());
+
+      if (resp.getCode() != 200) {
+        logger.error("Error while deleting XMPP user");
+        logger.error(resp.toString());
+        throw new ChatServerException(ChatServerException.USER_DELETION_FAIL);
+      }
+
       return resp;
+
     } catch (Exception e) {
-
-      logger.error("Error while deleting user: " + " / " + e.getClass().getName() + " / " +
-          e.getMessage());
-
-      throw new ChatServerException(ChatServerException.USER_DELETION_FAIL);
+      logger.error("Error while deleting XMPP user");
+      logger.error(e.getClass().getName() + " / " + e.getMessage());
+      throw new ChatServerException(ChatServerException.USER_CREATION_FAIL);
     }
 
   }
 
-  /**
-   * Create a relationship between users
-   * @param login1
-   * @param login2
-   * @return
-   */
-  public HttpRequestResponse createRelationShip(String login1, String login2) {
+  @Override
+  public HttpRequestResponse createRelationShip(final UserFull user1, final UserFull user2) {
+
+    String login1 = getNodeFromUser(user1);
 
     ArrayList<BasicNameValuePair> datas = new ArrayList<>();
-    datas.add(new BasicNameValuePair("jid", login2 + "@" + domain));
+    datas.add(new BasicNameValuePair("jid", getJidFromUser(user2)));
+    datas.add(new BasicNameValuePair("subscriptionType", "3"));
 
     try {
       final HttpRequestResponse resp = requestHandler
           .doPost(url + "/users/" + login1 + "/roster", datas, getAuthorizationHeaders());
 
-      // throw if relationship already exist on server
+      // throw special error if relationship already exist on server
       if (resp.getCode() == 409) {
         throw new ChatServerException(ChatServerException.RELATIONSHIP_ALREADY_EXIST);
+      }
+
+      else if (resp.getCode() != 201) {
+        logger.error("Error while creating XMPP relationship");
+        logger.error(resp.toString());
+        throw new ChatServerException(ChatServerException.RELATIONSHIP_CREATION_FAIL);
       }
 
       return resp;
     } catch (Exception e) {
 
-      if (e instanceof ChatServerException) {
-        throw (ChatServerException) e;
-      } else {
-        // other errors
-        logger
-            .error("Error while creating relationship: " + " / " + e.getClass().getName() + " / " +
-                e.getMessage());
-
-        throw new ChatServerException(ChatServerException.RELATIONSHIP_CREATION_FAIL);
-      }
+      logger.error("Error while creating XMPP relationship");
+      logger.error(e.getClass().getName() + " / " + e.getMessage());
+      throw new ChatServerException(ChatServerException.RELATIONSHIP_CREATION_FAIL);
 
     }
 
   }
 
-  /**
-   * Delete a relationship between users
-   * @param login1
-   * @param login2
-   * @return
-   */
-  public HttpRequestResponse deleteRelationShip(String login1, String login2) {
+  @Override
+  public HttpRequestResponse deleteRelationShip(final UserFull user1, final UserFull user2) {
+
+    String login1 = getNodeFromUser(user1);
+    String jid2 = getJidFromUser(user2);
 
     try {
       final HttpRequestResponse resp = requestHandler
-          .doDelete(url + "/users/" + login1 + "/roster/" + login2 + "@" + domain, null,
+          .doDelete(url + "/users/" + login1 + "/roster/" + jid2, null,
               getAuthorizationHeaders());
+
+      if (resp.getCode() != 200) {
+        logger.error("Error while creating XMPP relationship");
+        logger.error(resp.toString());
+        throw new ChatServerException(ChatServerException.RELATIONSHIP_DELETION_FAIL);
+      }
+
       return resp;
+
     } catch (Exception e) {
-
-      // other errors
-      logger.error("Error while deleting relationship: " + " / " + e.getClass().getName() + " / " +
-          e.getMessage());
-
+      logger.error("Error while creating XMPP relationship");
+      logger.error(e.getClass().getName() + " / " + e.getMessage());
       throw new ChatServerException(ChatServerException.RELATIONSHIP_DELETION_FAIL);
     }
 
   }
 
   /**
-   * Return the user list
-   * @return
-   */
-  public HttpRequestResponse getUserList() {
-
-    try {
-      final HttpRequestResponse resp =
-          requestHandler.doGet(url + "/users", null, getAuthorizationHeaders());
-      return resp;
-    } catch (Exception e) {
-      logger.warn("Error while formatting HTTP response", e);
-    }
-
-    // fail while retrieve user list
-    return null;
-  }
-
-
-  /**
-   * Return authorization headers
+   * Return authorization headers for REST access
    * @return
    */
   private ArrayList<BasicNameValuePair> getAuthorizationHeaders() {
@@ -204,4 +184,21 @@ public class OpenfireServer implements ChatServer {
     return headers;
   }
 
+  /**
+   * Create a cross domain XMPP complete id from user
+   * @param user
+   * @return
+   */
+  public String getJidFromUser(final UserFull user) {
+    return getNodeFromUser(user) + "@" + domain;
+  }
+
+  /**
+   * Create a cross domain XMPP login from user
+   * @param user
+   * @return
+   */
+  private String getNodeFromUser(final UserFull user) {
+    return user.getLogin() + user.getId();
+  }
 }

@@ -1,5 +1,6 @@
 package org.silverpeas.core.chat.servers;
 
+import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.chat.HttpRequestResponse;
 
 /**
@@ -10,33 +11,36 @@ public interface ChatServer {
 
   /**
    * Create a user on distant server
-   * @param login
-   * @param password
+   *
+   * @param user
    * @return
    */
-  public HttpRequestResponse createUser(String login, String password);
+  public HttpRequestResponse createUser(UserFull user);
 
   /**
    * Delete a user on a distant server
-   * @param login
+   *
+   * @param user
    * @return
    */
-  public HttpRequestResponse deleteUser(String login);
+  public HttpRequestResponse deleteUser(UserFull user);
 
   /**
-   * Create a relationship between users
-   * @param login1
-   * @param login2
+   * Create a relationship from user1 to user 2
+   *
+   * @param user1
+   * @param user1
    * @return
    */
-  public HttpRequestResponse createRelationShip(String login1, String login2);
+  public HttpRequestResponse createRelationShip(UserFull user1, UserFull user2);
 
   /**
-   * Delete a relationship between users
-   * @param login1
-   * @param login2
+   * Delete a relationship from user1 to user2
+   *
+   * @param user1
+   * @param user2
    * @return
    */
-  public HttpRequestResponse deleteRelationShip(String login1, String login2);
+  public HttpRequestResponse deleteRelationShip(UserFull user1, UserFull user2);
 
 }

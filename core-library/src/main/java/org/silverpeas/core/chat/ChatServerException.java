@@ -8,11 +8,7 @@ import org.silverpeas.core.SilverpeasRuntimeException;
  * @author remipassmoilesel
  */
 public class ChatServerException extends SilverpeasRuntimeException {
-
-  /**
-   * User already exist on chat server
-   */
-  public static final String USER_ALREADY_EXIST = "USER_ALREADY_EXIST";
+  
   /**
    * Error while creating user
    */
