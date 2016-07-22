@@ -32,7 +32,7 @@ public class ChatIntegrationCode {
    * @param xhtml
    * @return
    */
-  public static final String addClientIntegrationCode(final ElementContainer xhtml) {
+  public static final ElementContainer addClientIntegrationCode(final ElementContainer xhtml) {
 
     // add client style
     xhtml.addElement(new link().setType(STYLESHEET_TYPE).setRel(STYLESHEET_REL)
@@ -49,23 +49,23 @@ public class ChatIntegrationCode {
     String xmppDomain = settings.getString("chat.xmpp.xmppDomain");
 
     UserFull full = UserFull.getById(UserDetail.getCurrentRequester().getId());
-    String userLogin = full.getLogin();
+    String userLogin = full.getLogin() + full.getId();
     String userPassword = full.getToken();
     String userDomainId = full.getDomainId();
 
     // add connexion credentials
-    xhtml.addElement("<script type='text/javascript'>"
-        + "window.jsxcConnexionCredentials = {"
-            + "userLogin: '" + userLogin + "', "
-            + "userPassword: '" + userPassword + "', "
-            + "userDomainId: '" + userDomainId + "', "
-            + "httpBindUrl: '" + httpBindUrl + "', "
-            + "xmppDomain: '" + xmppDomain + "', "
-            + "silverpeasContext: '" + URLUtil.getApplicationURL() + "', "
-        + "}" +
-        "</script>");
+    xhtml.addElement("\n<script type='text/javascript'>\n"
+        + "window.jsxcConnexionCredentials = {\n"
+            + "userLogin: '" + userLogin + "',\n "
+            + "userPassword: '" + userPassword + "',\n "
+            + "userDomainId: '" + userDomainId + "',\n "
+            + "httpBindUrl: '" + httpBindUrl + "',\n "
+            + "xmppDomain: '" + xmppDomain + "',\n "
+            + "silverpeasContext: '" + URLUtil.getApplicationURL() + "',\n "
+        + "}\n" +
+        "</script>\n");
 
-    return null;
+    return xhtml;
   }
 
   /**
