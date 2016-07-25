@@ -15,7 +15,7 @@ import static org.jsoup.nodes.Entities.EscapeMode.xhtml;
 /**
  * @author remipassmoilesel
  */
-public class ChatIntegrationCode {
+public class ChatWebIntegration {
 
   public static String CHAT_CLIENT_DIR = URLUtil.getApplicationURL() + "/chatclient/";
   public static String CHAT_CLIENT_STYLES = CHAT_CLIENT_DIR + "css/jsxc.css";

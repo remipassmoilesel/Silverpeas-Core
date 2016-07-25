@@ -29,6 +29,11 @@ $(function() {
 
   var options = {
 
+    // in french
+    defaultLang : 'fr',
+
+    autoLang : false,
+
     // REST support
     rest : {
       apiName : "openfire",
@@ -121,30 +126,23 @@ $(function() {
         var cred = window.jsxcConnexionCredentials;
         var context = cred.silverpeasContext;
 
-        $.getJSON(context + "/ChatUserInformations", {
-          IEFix : new Date().getTime(), Action : 'GetUserById', UserId : userId,
-        }, function(data) {
+        User.get(userId).then(function(data) {
+          jsxc.api.openChatWindow(data.login + "@" + cred.xmppDomain);
+        })
 
-          console.log(data);
+            .fail(function(error) {
+              console.error("Error while retrieving user login");
+              console.error(data);
 
-          if (data.success) {
-            jsxc.api.openChatWindow(data.login + "@" + cred.xmppDomain);
-          }
-
-          else {
-            console.error("Error while retrieving user login");
-            console.error(data);
-
-            jsxc.api.feedback("Erreur lors de l'ouverture de la fenêtre de discussion");
-          }
-        });
+              jsxc.api.feedback("Erreur lors de l'ouverture de la fenêtre de discussion");
+            });
 
       },
 
       /**
        * Connect user to chat client
        */
-      connect: function(){
+      connect : function() {
         // credential should be stored on page
         var cred = window.jsxcConnexionCredentials;
 
@@ -160,7 +158,7 @@ $(function() {
        * Send Silverpeas invitation to user
        * @param login
        */
-      inviteUser: function(login){
+      inviteUser : function(login) {
 
         // credential should be stored on page
         var cred = window.jsxcConnexionCredentials;
@@ -173,7 +171,7 @@ $(function() {
           TargetUserLogin : login,
           TargetUserDomainId : cred.userDomainId
         }, function(data) {
-          
+
           if (!data.success) {
             jsxc.api.feedback("Erreur lors de l'invitation de l'utilisateur");
           }
@@ -210,8 +208,8 @@ $(function() {
       "onBuddyAccepted" : function(buddyBJid) {
         console.log("onBuddyAccepted");
         console.log(buddyBJid);
-      }
-
+      },
+      
     };
 
     jsxc.api.registerCallbacks(SilverpeasCallbackSet);

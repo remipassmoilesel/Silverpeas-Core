@@ -56,6 +56,7 @@
 	__webpack_require__(11)(visualizationModule);
 	__webpack_require__(13)(visualizationModule);
 	__webpack_require__(15)(visualizationModule);
+	__webpack_require__(17)(visualizationModule);
 
 	$(function() {
 
@@ -88,46 +89,59 @@
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = {
+	/**
+	 *
+	 *  STAT SERVER CONFIGURATION
+	 *
+	 */
+	module.exports = (function() {
 
-	  /**
-	   *
-	   *  SERVER CONFIGURATION
-	   *
-	   */
-	  /**
-	   * Port to listen
-	   */
-	  PORT : 3000,
+	  var DEV_MODE = false;
 
-	  /**
-	   * Database settings
-	   */
-	  PG_USER : "postgres",
-	  PG_SECRET : "postgres",
-	  PG_DATABASE : "Stats",
-	  PG_PORT : "5432",
+	  var configuration = {
 
-	  /**
-	   * Authorization header value
-	   */
-	  AUTHORIZATION : "DK5I4-0yl9N2KN64Pg5YcEAsdnCXeamr",
+	    /**
+	     * Port to listen
+	     */
+	    PORT : 3000,
 
-	  /**
-	   * Cross origin policy settings
-	   */
-	  ACCES_CONTROL_ALLOW_ORIGN : "*",
-	  ACCESS_CONTROL_ALLOW_HEADERS: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+	    /**
+	     * Database settings
+	     */
+	    PG_USER : "postgres",
+	    PG_SECRET : "postgres",
+	    PG_DATABASE : "Stats",
+	    PG_PORT : "5432",
 
-	  /**
-	   * CLIENT CONFIGURATION
-	   */
-	  /**
-	   * Root url. Without trailing slash
-	   */
-	  DESTINATION_URL: "https://im.silverpeas.net/stats"
+	    /**
+	     * Authorization header value
+	     */
+	    AUTHORIZATION : "DK5I4-0yl9N2KN64Pg5YcEAsdnCXeamr",
 
-	};
+	    /**
+	     * Cross origin policy settings
+	     */
+	    ACCES_CONTROL_ALLOW_ORIGN : "*",
+	    ACCESS_CONTROL_ALLOW_HEADERS : "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+
+	    /**
+	     * CLIENT CONFIGURATION
+	     */
+
+	    /**
+	     * Root url. Without trailing slash. You can specify a port here.
+	     */
+	    DESTINATION_URL : "https://im.silverpeas.net/stats"
+	  }
+
+	  if (DEV_MODE === true) {
+	    configuration.PORT = 3005;
+	    configuration.DESTINATION_URL = "http://127.0.0.1:3005";
+	  }
+
+	  return configuration;
+
+	})();
 
 /***/ },
 /* 3 */
@@ -234,7 +248,7 @@
 	      })
 
 	      .fail(function(){
-	        console.log("fail sending buffer");
+	        console.log("Stats: fail sending buffer");
 	        console.log(arguments);
 	      });
 	};
@@ -292,6 +306,27 @@
 
 	  var req = {
 	    url : self.options.readUrl + "/event/timeline/hours",
+	    type : 'POST',
+	    headers : {
+	      "Authorization" : self.options.authorization,
+	      "Content-Type" : "application/json"
+	    }
+	  };
+
+	  return $.ajax(req);
+
+	};
+
+	/**
+	 * Return an events resume
+	 * @returns {*}
+	 */
+	Stats.prototype.getLastEvents = function(){
+
+	  var self = this;
+
+	  var req = {
+	    url : self.options.readUrl + "/event/last",
 	    type : 'POST',
 	    headers : {
 	      "Authorization" : self.options.authorization,
@@ -367,10 +402,8 @@
 	        $scope.$apply();
 
 	      })
-	      .fail(function(result) {
-
-	        console.log(result);
-
+	      .fail(function() {
+	        console.log(arguments);
 	      });
 
 	};
@@ -5701,10 +5734,8 @@
 	        $scope.$apply();
 
 	      })
-	      .fail(function(result) {
-
-	        console.log(result);
-
+	      .fail(function() {
+	        console.log(arguments);
 	      });
 
 	};
@@ -5748,6 +5779,8 @@
 
 	    $scope.$apply();
 
+	  }).fail(function() {
+	    console.error(arguments);
 	  });
 
 	};
@@ -5783,11 +5816,13 @@
 	  var self = this;
 
 	  stats.getEventResume().then(function(result) {
-	    
+
 	    self.eventResume = result;
 
 	    $scope.$apply();
-	    
+
+	  }).fail(function() {
+	    console.error(arguments);
 	  });
 
 	};
@@ -5810,6 +5845,59 @@
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"eventResumeContainer\">\n\n  <h2>Event resume</h2>\n\n  <div style=\"overflow: auto\">\n    <div ng-repeat=\"(i, val) in $ctrl.eventResume\">{{i + 1}}. {{val.event_name + \": \" + val.count}}\n    </div>\n  </div>\n\n</div>";
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Show a list of availables keywords
+	 */
+	var template = __webpack_require__(18);
+
+	var LastEventsController = function($http, $scope, stats) {
+
+	  var self = this;
+
+	  stats.getLastEvents().then(function(result) {
+
+	    self.lastEvents = result;
+
+	    $.each(self.lastEvents, function(index, element){
+	      //2016-07-03T17:05:00.585Z
+	      var month = element.datetime.substring(5,7);
+	      var day = element.datetime.substring(8,10);
+	      var hour = element.datetime.substring(11,16);
+	      element.prettyDate = day + "/" + month + " - " + hour ;
+	    });
+
+	    $scope.$apply();
+
+	  })
+	      .fail(function() {
+	        console.error(arguments);
+	      });
+
+	};
+
+	LastEventsController.$inject = ["$http", "$scope", "stats"];
+
+	module.exports = function(angularMod) {
+
+	  angularMod.component("lastEvents", {
+	    template : template,
+
+	    controller : LastEventsController,
+
+	    bindings : {}
+	  });
+	};
+
+/***/ },
+/* 18 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"lastEventsContainer\">\n\n  <h2>Last events</h2>\n\n  <div style=\"overflow: auto; height: 200px\">\n    <div ng-repeat=\"(i, val) in $ctrl.lastEvents\">\n      <div style=\"width: 7%; display: inline-block\">{{val.id}}</div>\n      <div style=\"width: 17%; display: inline-block\">{{val.prettyDate}}</div>\n      <div style=\"width: 40%; display: inline-block\">{{val.event_name}}</div>\n      <div style=\"display: inline-block\">{{val.event_data}}</div>\n    </div>\n  </div>\n\n</div>";
 
 /***/ }
 /******/ ]);

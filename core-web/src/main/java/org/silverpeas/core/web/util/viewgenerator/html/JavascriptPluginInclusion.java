@@ -23,7 +23,7 @@
  */
 package org.silverpeas.core.web.util.viewgenerator.html;
 
-import org.silverpeas.core.chat.ChatIntegrationCode;
+import org.silverpeas.core.chat.ChatWebIntegration;
 import org.silverpeas.core.notification.user.client.NotificationManagerSettings;
 import org.silverpeas.core.util.URLUtil;
 import org.apache.ecs.Element;
@@ -666,7 +666,7 @@ public class JavascriptPluginInclusion {
 
   public static ElementContainer includeChatClient(final ElementContainer xhtml) {
 
-    ChatIntegrationCode.addClientIntegrationCode(xhtml);
+    ChatWebIntegration.addClientIntegrationCode(xhtml);
 
     return xhtml;
   }

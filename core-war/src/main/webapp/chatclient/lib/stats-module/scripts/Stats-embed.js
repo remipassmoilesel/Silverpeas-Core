@@ -99,7 +99,7 @@ Stats.prototype.sendDataBuffer = function() {
       })
 
       .fail(function(){
-        console.log("fail sending buffer");
+        console.log("Stats: fail sending buffer");
         console.log(arguments);
       });
 };
@@ -157,6 +157,27 @@ Stats.prototype.getEventTimeline = function(){
 
   var req = {
     url : self.options.readUrl + "/event/timeline/hours",
+    type : 'POST',
+    headers : {
+      "Authorization" : self.options.authorization,
+      "Content-Type" : "application/json"
+    }
+  };
+
+  return $.ajax(req);
+
+};
+
+/**
+ * Return an events resume
+ * @returns {*}
+ */
+Stats.prototype.getLastEvents = function(){
+
+  var self = this;
+
+  var req = {
+    url : self.options.readUrl + "/event/last",
     type : 'POST',
     headers : {
       "Authorization" : self.options.authorization,

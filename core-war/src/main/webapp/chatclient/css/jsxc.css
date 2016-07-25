@@ -3349,6 +3349,8 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
     text-align: center;
     line-height: 30px;
     cursor: pointer; }
+  #jsxc_roster .jsxc_videocall {
+    text-decoration: line-through; }
 
 #jsxc_toggleRoster {
   width: 14px;
@@ -4411,6 +4413,9 @@ img.jsxc_vCard {
 .jsxc_deleteicon {
   background-image: url('../img/delete_black.svg'); }
 
+.jsxc_videoicon {
+  background-image: url('../img/camera_icon_black.svg'); }
+
 .jsxc_chaticon {
   background-image: url('../img/speech_balloon_black.svg'); }
 
@@ -4790,6 +4795,8 @@ div.jsxc_video {
     margin: 4px; }
   #jsxc_side_menu p {
     padding: 7px; }
+  #jsxc_side_menu .jsxc_menu_subtitle {
+    font-weight: bolder; }
   #jsxc_side_menu .jsxc_sideMenuBottom {
     height: 70px; }
   #jsxc_side_menu .jsxc_menu_search_results {
@@ -5063,8 +5070,13 @@ div.jsxc_video {
       opacity: 0.8; }
       #jsxc_videoPanel .jsxc_videoPanelContent .jsxc_videoControl:hover {
         opacity: 1.0; }
-    #jsxc_videoPanel .jsxc_videoPanelContent .jsxc_hangUp {
+    #jsxc_videoPanel .jsxc_videoPanelContent .jsxc_hangUpControl {
       background-image: url('../img/hang_up_red.svg');
+      height: 20px;
+      width: 40px;
+      cursor: pointer; }
+    #jsxc_videoPanel .jsxc_videoPanelContent .jsxc_fullscreenControl {
+      background-image: url('../img/fullscreen_black.svg');
       height: 20px;
       width: 40px;
       cursor: pointer; }
@@ -5074,6 +5086,11 @@ div.jsxc_video {
     text-align: center;
     font-weight: bolder;
     font-size: 13px; }
+
+.jsxc_fullscreenVideo {
+  width: 100%;
+  margin: 10px;
+  border: solid 1px gray; }
 
 /**
 
