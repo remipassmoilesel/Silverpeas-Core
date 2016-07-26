@@ -3,19 +3,25 @@ package org.silverpeas.core.chat;
 import org.apache.ecs.ElementContainer;
 import org.apache.ecs.xhtml.link;
 import org.apache.ecs.xhtml.script;
+import org.apache.ecs.xhtml.var;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.URLUtil;
+import org.silverpeas.core.util.logging.SilverLogger;
 
+import static java.awt.SystemColor.window;
 import static org.bouncycastle.asn1.x500.style.RFC4519Style.userPassword;
 import static org.jsoup.nodes.Entities.EscapeMode.xhtml;
+import static org.silverpeas.core.admin.user.model.SilverpeasRole.user;
 
 /**
  * @author remipassmoilesel
  */
-public class ChatWebIntegration {
+public class ChatUtils {
+
+  private static SilverLogger logger = SilverLogger.getLogger("ChatUtils (static)");
 
   public static String CHAT_CLIENT_DIR = URLUtil.getApplicationURL() + "/chatclient/";
   public static String CHAT_CLIENT_STYLES = CHAT_CLIENT_DIR + "css/jsxc.css";
@@ -49,7 +55,7 @@ public class ChatWebIntegration {
     String xmppDomain = settings.getString("chat.xmpp.xmppDomain");
 
     UserFull full = UserFull.getById(UserDetail.getCurrentRequester().getId());
-    String userLogin = full.getLogin() + full.getId();
+    String userLogin = getNodeFromUser(full);
     String userPassword = full.getToken();
     String userDomainId = full.getDomainId();
 
@@ -69,17 +75,21 @@ public class ChatWebIntegration {
   }
 
   /**
-   * Return a link element which open chat client for composing message
-   * @param text
-   * @param loginDest
+   * Create a cross domain XMPP complete id from user and xmpp domain
+   * @param user
    * @return
    */
-  public String getMessageLink(String text, String loginDest){
+  public static String getJidFromUser(final UserFull user, String xmppDomain) {
+    return (getNodeFromUser(user) + "@" + xmppDomain).toLowerCase();
+  }
 
-    String m_context = URLUtil.getApplicationURL();
-
-
-    return null;
+  /**
+   * Create a cross domain XMPP login from user
+   * @param user
+   * @return
+   */
+  public static String getNodeFromUser(final UserFull user) {
+    return (user.getLogin() + "_id" + user.getId()).toLowerCase();
   }
 
 }
