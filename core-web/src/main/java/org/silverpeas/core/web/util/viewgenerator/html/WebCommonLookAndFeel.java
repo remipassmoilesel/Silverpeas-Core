@@ -203,6 +203,7 @@ public class WebCommonLookAndFeel {
         GraphicElementFactory.JQUERY_i18N_JS));
     code.append(getJavaScriptTag(contextPath + "/util/javaScript/jquery/jquery.cookie.js"));
     code.append(getJavaScriptTag(contextPath + "/util/javaScript/silverpeas-jquery.js"));
+    code.append(getJavaScriptTag(contextPath + "/util/javaScript/silverpeas-chat.js"));
 
     code.append(includeLayout(new ElementContainer(),
         LookHelper.getLookHelper(controller.getHttpSession())).toString()).append(STR_NEW_LINE);
