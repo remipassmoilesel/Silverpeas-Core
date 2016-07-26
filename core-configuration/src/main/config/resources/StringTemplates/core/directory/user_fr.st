@@ -7,7 +7,7 @@
      <li class="infoConnection">
 	$if(user.connected)$
 			$if(notMyself)$
-				<a href="#" title="Discuter avec $user.firstName$" onclick="javascript:window.open('$context$/RcommunicationUser/jsp/OpenDiscussion?userId=$user.id$','popupDiscussion$user.id$','menubar=no, status=no, scrollbars=no, menubar=no, width=600, height=450')">
+				<a href="#" title="Discuter avec $user.firstName$" onclick="javascript:SilverpeasChat.openChatWindow('$user.id$')">
 					<img src="$context$/util/icons/online.gif" alt="Discuter avec $user.firstName$" title="Discuter avec $user.firstName$"/>
 				</a>
 			$else$

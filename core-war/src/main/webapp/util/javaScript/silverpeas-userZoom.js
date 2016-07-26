@@ -119,7 +119,8 @@
    * Open the Silverpeas tchat WEB page.
    */
   function tchatWith(user) {
-    openWindow(user.tchatPage, 'popupDiscussion' + user.id, '650', '460', 'menubar=no,scrollbars=no,statusbar=no');
+    //openWindow(user.tchatPage, 'popupDiscussion' + user.id, '650', '460', 'menubar=no,scrollbars=no,statusbar=no');
+    SilverpeasChat.openChatWindow(user);
   }
 
   /**

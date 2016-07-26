@@ -76,7 +76,7 @@
 				</a>
 
 				<a href="#" title="<fmt:message key="tchat" />"  class="accessTchat-user"
-					onclick="javascript:window.open('${context}/RcommunicationUser/jsp/OpenDiscussion?userId=${member.id}',
+					onclick="javascript:SilverpeasChat.openChatWindow(${member.id})',
 						'popupDiscussion${member.id}','menubar=no, status=no, scrollbars=no, menubar=no, width=600, height=450');return false;">
 					<img src="${context}/util/icons/talk2user.gif"
 						alt="<fmt:message key="tchat" />"
